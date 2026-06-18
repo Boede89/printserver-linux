@@ -1,0 +1,6 @@
+# Beispiel-Konfiguration (optional — primär Umgebungsvariablen in .env)
+api_token: "in .env setzen"
+default_printer: "BueroDrucker"
+allowed_printer_prefixes:
+  - "Buero"
+  - "FW_"

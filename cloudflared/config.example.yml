@@ -1,0 +1,18 @@
+# Beispiel — anpassen und nach /etc/cloudflared/config.yml kopieren
+# Dokumentation: docs/CLOUDFLARE-TUNNEL.md
+
+tunnel: ERSETZEN-MIT-TUNNEL-UUID
+credentials-file: /etc/cloudflared/ERSETZEN-MIT-TUNNEL-UUID.json
+
+# Optional: metrics nur lokal
+metrics: 127.0.0.1:20241
+
+ingress:
+  # Bestehende Dienste hier einfügen, z. B.:
+  # - hostname: fw-manager.example.com
+  #   service: http://127.0.0.1:8080
+
+  - hostname: print.ihre-domain.de
+    service: http://127.0.0.1:8766
+
+  - service: http_status:404

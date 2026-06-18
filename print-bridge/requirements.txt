@@ -1,0 +1,1 @@
+# keine externen Abhängigkeiten — nur Python-Standardbibliothek
