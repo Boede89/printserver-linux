@@ -14,9 +14,9 @@ services:
 
       CUPS_PRINTER_URI: ${CUPS_PRINTER_URI:-}
 
-      CUPS_PRINTER_MAKE_MODEL: ${CUPS_PRINTER_MAKE_MODEL:-KONICA MINOLTA bizhub C250i IPP}
+      CUPS_AUTO_PRINTER: ${CUPS_AUTO_PRINTER:-false}
 
-      CUPS_SSL_OPTIONS: ${CUPS_SSL_OPTIONS:-AllowAnyRoot,AllowExpired,AllowSelfSigned}
+      CUPS_PRINTER_MAKE_MODEL: ${CUPS_PRINTER_MAKE_MODEL:-Everywhere IPP Printer}
 
     volumes:
 

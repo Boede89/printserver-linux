@@ -20,17 +20,65 @@ CUPS_PRINTER_MAKE_MODEL=KONICA MINOLTA bizhub C250i IPP
 PRINT_DEFAULT_PRINTER=Zentrale
 ```
 
-## Deploy
+## Deploy (zwei Schritte)
+
+### Schritt A — CUPS erst stabil starten
+
+In `.env`:
+
+```env
+CUPS_AUTO_PRINTER=false
+```
 
 ```bash
 cd /opt/printserver
 git pull
 docker-compose down
-docker volume rm printserver_cups_config   # einmalig, alte kaputte Config löschen
+docker run --rm -v printserver_cups_config:/etc/cups busybox rm -f /etc/cups/printers.conf
 docker-compose up -d
+docker-compose ps    # cups muss „Up“ sein, nicht „Restarting“
+```
+
+### Schritt B — Drucker per Web-UI (empfohlen)
+
+SSH-Tunnel vom PC:
+
+```bash
+ssh -L 8631:127.0.0.1:631 root@192.168.178.113
+```
+
+Browser: **http://localhost:8631** → `admin` / Passwort aus `CUPS_ADMIN_PASSWORD`
+
+→ **Drucker hinzufügen** → **Internet Printing Protocol (ipp)**  
+→ URL: `ipps://192.168.178.100/ipp/print`  
+→ Treiber: **IPP Everywhere** / **KONICA MINOLTA**  
+→ Name: `Zentrale`
+
+Test:
+
+```bash
 docker-compose exec cups lpstat -p
 docker-compose exec cups bash -c 'echo Test | lp -d Zentrale'
 ```
+
+### Optional: Auto-Setup wieder aktivieren
+
+Nur wenn Schritt A stabil war — sonst Restart-Loop:
+
+```env
+CUPS_AUTO_PRINTER=true
+CUPS_PRINTER_URI=ipp://192.168.178.100/ipp/print
+```
+
+(`ipp://` statt `ipps://` oft stabiler in CUPS-Docker)
+
+```bash
+docker-compose down
+docker volume rm printserver_cups_config
+docker-compose up -d
+```
+
+## Deploy (ein Schritt, nur wenn Auto-Setup funktioniert)
 
 ## IPP-URL testen (vom LXC)
 
