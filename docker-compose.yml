@@ -9,13 +9,9 @@ services:
     restart: "no"
 
     environment:
-
-      CUPS_PRINTER_NAME: ${CUPS_PRINTER_NAME:-Zentrale}
-
-      CUPS_PRINTER_URI: ${CUPS_PRINTER_URI:-}
-
       CUPS_AUTO_PRINTER: ${CUPS_AUTO_PRINTER:-false}
-
+      CUPS_PRINTER_NAME: ${CUPS_PRINTER_NAME:-Zentrale}
+      CUPS_PRINTER_URI: ${CUPS_PRINTER_URI:-}
       CUPS_PRINTER_MAKE_MODEL: ${CUPS_PRINTER_MAKE_MODEL:-Everywhere IPP Printer}
 
     volumes:
