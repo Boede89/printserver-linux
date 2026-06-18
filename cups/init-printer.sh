@@ -13,12 +13,11 @@ fi
 
 UUID="$(cat /proc/sys/kernel/random/uuid 2>/dev/null || echo 00000000-0000-0000-0000-000000000001)"
 NOW="$(date +%s)"
-
-# Konica Minolta bizhub: IPPS mit selbstsigniertem Zertifikat
-SSL_OPTS="${CUPS_SSL_OPTIONS:-AllowAnyRoot,AllowExpired,AllowSelfSigned}"
+MAKE_MODEL="${CUPS_PRINTER_MAKE_MODEL:-Everywhere IPP Printer}"
 
 mkdir -p /etc/cups
 
+# Keine "Option"-Zeilen — können cupsd zum Absturz bringen.
 cat > "$CONF" << EOF
 # Automatisch erzeugt von cups-init
 <Printer ${PRINTER_NAME}>
@@ -38,8 +37,7 @@ KLimit 0
 OpPolicy default
 device-uri ${PRINTER_URI}
 PrinterInfo ${PRINTER_NAME}
-PrinterMakeModel ${CUPS_PRINTER_MAKE_MODEL:-KONICA MINOLTA bizhub C250i IPP}
-Option cupsSSLOptions ${SSL_OPTS}
+PrinterMakeModel ${MAKE_MODEL}
 </Printer>
 EOF
 
