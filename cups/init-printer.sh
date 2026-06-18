@@ -39,7 +39,7 @@ StateTime ${NOW}
 ConfigTime ${NOW}
 Reason none
 Accepting Yes
-Shared No
+Shared Yes
 JobSheets none none
 QuotaPeriod 0
 PageLimit 0

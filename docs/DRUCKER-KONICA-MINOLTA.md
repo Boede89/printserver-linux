@@ -64,6 +64,15 @@ docker-compose exec cups lpstat -p
 docker-compose exec cups bash -c 'echo Test | lp -d Zentrale'
 ```
 
+**Wichtig für Print-Bridge:** Drucker muss **freigegeben** sein (`Shared Yes`), sonst meldet die Bridge
+`lp: The printer or class is not shared.` — die Print-Bridge läuft in einem eigenen Container und
+greift per `CUPS_SERVER=cups:631` zu.
+
+```bash
+docker-compose exec cups sed -i 's/^Shared No$/Shared Yes/' /etc/cups/printers.conf
+docker-compose restart cups
+```
+
 ### Optional: Auto-Setup wieder aktivieren
 
 Nur wenn Schritt A stabil war — sonst Restart-Loop:
