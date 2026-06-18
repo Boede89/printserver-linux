@@ -1,100 +1,35 @@
 services:
-
-  cups-init:
-
-    image: busybox:1.36
-
-    container_name: printserver_cups_init
-
-    restart: "no"
-
-    environment:
-      CUPS_AUTO_PRINTER: ${CUPS_AUTO_PRINTER:-false}
-      CUPS_PRINTER_NAME: ${CUPS_PRINTER_NAME:-Zentrale}
-      CUPS_PRINTER_URI: ${CUPS_PRINTER_URI:-}
-      CUPS_PRINTER_MAKE_MODEL: ${CUPS_PRINTER_MAKE_MODEL:-Everywhere IPP Printer}
-
-    volumes:
-
-      - cups_config:/etc/cups
-
-      - ./cups/init-printer.sh:/init/init-printer.sh:ro
-
-    entrypoint: ["/bin/sh", "/init/init-printer.sh"]
-
-
-
   cups:
-
     image: olbat/cupsd:latest
-
     container_name: printserver_cups
-
     restart: unless-stopped
-
-    depends_on:
-
-      cups-init:
-
-        condition: service_completed_successfully
-
     environment:
-
       CUPSADMIN: admin
-
       CUPSPASSWORD: ${CUPS_ADMIN_PASSWORD:-changeme}
-
     volumes:
-
       - cups_config:/etc/cups
-
       - cups_spool:/var/spool/cups
-
     ports:
-
       - "127.0.0.1:631:631"
 
-
-
   print-bridge:
-
     build: ./print-bridge
-
     container_name: printserver_bridge
-
     restart: unless-stopped
-
     depends_on:
-
       - cups
-
     environment:
-
       PRINT_API_TOKEN: ${PRINT_API_TOKEN:?PRINT_API_TOKEN setzen}
-
       PRINT_DEFAULT_PRINTER: ${PRINT_DEFAULT_PRINTER:-${CUPS_PRINTER_NAME:-Zentrale}}
-
       PRINT_BRIDGE_PORT: ${PRINT_BRIDGE_PORT:-8766}
-
       PRINT_ALLOWED_PRINTER_PREFIXES: ${PRINT_ALLOWED_PRINTER_PREFIXES:-}
-
       CUPS_SERVER: cups:631
-
     volumes:
-
       - print_jobs:/var/spool/print-bridge
-
     ports:
-
       - "${PRINT_BRIDGE_BIND:-127.0.0.1}:${PRINT_BRIDGE_PORT:-8766}:8766"
 
-
-
 volumes:
-
   cups_config:
-
   cups_spool:
-
   print_jobs:
-

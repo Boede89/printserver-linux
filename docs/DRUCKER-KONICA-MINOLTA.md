@@ -22,21 +22,24 @@ PRINT_DEFAULT_PRINTER=Zentrale
 
 ## Deploy (zwei Schritte)
 
-### Schritt A — CUPS erst stabil starten
+### Schritt A — CUPS starten (ohne Auto-Drucker)
+
+`cups-init` wurde entfernt — es hat vor CUPS in das Volume geschrieben und `cupsd.conf` überschrieben.
 
 In `.env`:
 
 ```env
 CUPS_AUTO_PRINTER=false
+PRINT_BRIDGE_BIND=0.0.0.0
 ```
 
 ```bash
 cd /opt/printserver
 git pull
 docker-compose down
-docker run --rm -v printserver_cups_config:/etc/cups busybox rm -f /etc/cups/printers.conf
+docker volume rm printserver_cups_config printserver_cups_spool
 docker-compose up -d
-docker-compose ps    # cups muss „Up“ sein, nicht „Restarting“
+docker-compose ps    # cups muss „Up“ sein
 ```
 
 ### Schritt B — Drucker per Web-UI (empfohlen)
