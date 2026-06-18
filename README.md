@@ -64,7 +64,7 @@ curl -fsS -H "Authorization: Bearer IHR_TOKEN" \
 ## Dokumentation
 
 - **[Proxmox LXC von null](docs/PROXMOX-SETUP.md)** — Container anlegen, Docker, Drucker, Tunnel
-- [Cloudflare Tunnel](docs/CLOUDFLARE-TUNNEL.md)
+- [Konica Minolta bizhub C250i](docs/DRUCKER-KONICA-MINOLTA.md)
 - [Sicherheit](docs/SICHERHEIT.md)
 - [Feuerwehr-Manager-Anbindung](docs/FEUERWEHR-MANAGER-INTEGRATION.md)
 
