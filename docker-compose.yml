@@ -1,8 +1,28 @@
 services:
+  # Kopiert cupsd.conf aus dem Image ins Volume, bevor cupsd startet.
+  cups-bootstrap:
+    image: olbat/cupsd:latest
+    container_name: printserver_cups_bootstrap
+    restart: "no"
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        if [ ! -f /config/cupsd.conf ]; then
+          echo "[cups-bootstrap] Standard-CUPS-Config ins Volume kopieren..."
+          cp -a /etc/cups/. /config/
+        else
+          echo "[cups-bootstrap] cupsd.conf bereits vorhanden."
+        fi
+    volumes:
+      - cups_config:/config
+
   cups:
     image: olbat/cupsd:latest
     container_name: printserver_cups
     restart: unless-stopped
+    depends_on:
+      cups-bootstrap:
+        condition: service_completed_successfully
     environment:
       CUPSADMIN: admin
       CUPSPASSWORD: ${CUPS_ADMIN_PASSWORD:-changeme}
