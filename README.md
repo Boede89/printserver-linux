@@ -30,7 +30,8 @@ git clone https://github.com/Boede89/printserver-linux.git /opt/printserver
 cd /opt/printserver
 cp .env.example .env
 # PRINT_API_TOKEN: openssl rand -hex 32
-docker compose up -d --build
+# Docker: apt install docker.io docker-compose  →  docker-compose up -d --build
+docker-compose up -d --build
 ```
 
 **Cloudflare Tunnel** um eine Zeile ergänzen (Details: [docs/CLOUDFLARE-TUNNEL.md](docs/CLOUDFLARE-TUNNEL.md)):

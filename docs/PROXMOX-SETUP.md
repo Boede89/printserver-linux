@@ -69,13 +69,38 @@ apt install -y curl git ca-certificates
 
 ## Schritt 2: Docker im LXC
 
+### Variante A — Debian-Standardpakete (einfach)
+
+`docker-compose-plugin` gibt es in den Debian-Repos oft **nicht**. Stattdessen:
+
 ```bash
-apt install -y docker.io docker-compose-plugin
+apt update
+apt install -y docker.io docker-compose
 systemctl enable --now docker
 docker --version
+docker-compose --version
 ```
 
-Falls Docker startet mit Fehler „permission denied“ / cgroup: Features `nesting` und `keyctl` prüfen (siehe oben).
+Starten mit **Bindestrich**: `docker-compose up -d --build` (nicht `docker compose`).
+
+### Variante B — Compose V2 Plugin (optional)
+
+Nur nötig, wenn Sie `docker compose` (ohne Bindestrich) bevorzugen:
+
+```bash
+apt install -y ca-certificates curl
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
+  > /etc/apt/sources.list.d/docker.list
+apt update
+apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+systemctl enable --now docker
+```
+
+Falls Docker mit Fehler „permission denied“ / cgroup startet: Features `nesting` und `keyctl` prüfen (siehe oben).
+
+> **Hinweis:** In den folgenden Befehlen steht `docker compose` (Plugin). Mit Variante A nutzen Sie `docker-compose` (mit Bindestrich) — z. B. `docker-compose exec cups …`
 
 ---
 
@@ -98,11 +123,17 @@ PRINT_BRIDGE_BIND=127.0.0.1
 CUPS_ADMIN_PASSWORD=<starkes Passwort>
 ```
 
-Starten:
+Starten (je nach Installation):
 
 ```bash
-docker compose up -d --build
-docker compose ps
+# Variante A (docker-compose aus Debian-Repos):
+docker-compose up -d --build
+docker-compose ps
+
+# Variante B (Compose-Plugin):
+# docker compose up -d --build
+# docker compose ps
+
 curl -fsS http://127.0.0.1:8766/api/v1/health
 ```
 
