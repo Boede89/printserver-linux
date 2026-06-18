@@ -13,6 +13,13 @@ services:
         else
           echo "[cups-bootstrap] cupsd.conf bereits vorhanden."
         fi
+        echo "[cups-bootstrap] CUPS für Docker-Netzwerk (Print-Bridge) anpassen..."
+        if grep -q '^Listen localhost:631' /config/cupsd.conf 2>/dev/null; then
+          sed -i 's/^Listen localhost:631/Listen *:631/' /config/cupsd.conf
+        fi
+        if ! grep -qE '^Listen \*:631' /config/cupsd.conf 2>/dev/null; then
+          echo 'Listen *:631' >> /config/cupsd.conf
+        fi
     volumes:
       - cups_config:/config
 

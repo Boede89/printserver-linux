@@ -85,7 +85,25 @@ docker-compose exec print-bridge lp -h print:print@cups:631 -d Zentrale -t Test 
 # Eigenes Passwort setzen
 docker-compose exec cups passwd print
 # gleiches Passwort in .env als CUPS_ADMIN_PASSWORD=
-docker-compose up -d --force-recreate print-bridge
+docker-compose up -d --no-deps --force-recreate print-bridge
+```
+
+Bei **`Scheduler is not running`** aus der Bridge: CUPS hört nur auf `localhost`.
+`Listen *:631` setzen und CUPS neu starten:
+
+```bash
+docker-compose exec cups sed -i 's/^Listen localhost:631/Listen *:631/' /etc/cups/cupsd.conf
+docker-compose exec cups grep Listen /etc/cups/cupsd.conf
+docker-compose restart cups
+sleep 5
+docker-compose exec print-bridge lpstat -p -h print:print@cups:631
+```
+
+Oder `git pull` und Bootstrap erneut ausführen:
+
+```bash
+docker-compose run --rm cups-bootstrap
+docker-compose restart cups
 ```
 
 ### Optional: Auto-Setup wieder aktivieren
