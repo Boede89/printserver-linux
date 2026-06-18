@@ -50,7 +50,8 @@ SSH-Tunnel vom PC:
 ssh -L 8631:127.0.0.1:631 root@192.168.178.113
 ```
 
-Browser: **http://localhost:8631** → `admin` / Passwort aus `CUPS_ADMIN_PASSWORD`
+Browser: **http://localhost:8631** → Benutzer **`print`**, Standard-Passwort **`print`**
+(oder eigenes Passwort nach `docker-compose exec cups passwd print`)
 
 → **Drucker hinzufügen** → **Internet Printing Protocol (ipp)**  
 → URL: `ipps://192.168.178.100/ipp/print`  
@@ -73,11 +74,17 @@ docker-compose exec cups sed -i 's/^Shared No$/Shared Yes/' /etc/cups/printers.c
 docker-compose restart cups
 ```
 
-Die Bridge authentifiziert sich mit `admin` und `CUPS_ADMIN_PASSWORD` (in `docker-compose.yml` als
-`admin:passwort@cups:631`). Bei `lp: Unauthorized` Passwort in CUPS prüfen:
+Die Bridge authentifiziert sich als CUPS-Benutzer **`print`** (olbat/cupsd-Image).
+In `docker-compose.yml`: `print:passwort@cups:631` — Passwort über `CUPS_ADMIN_PASSWORD`
+(Standard **`print`**). Bei `lp: Unauthorized`:
 
 ```bash
-docker-compose exec cups lppasswd -a admin
+# Standard testen (olbat/cupsd)
+docker-compose exec print-bridge lp -h print:print@cups:631 -d Zentrale -t Test /tmp/test.pdf
+
+# Eigenes Passwort setzen
+docker-compose exec cups passwd print
+# gleiches Passwort in .env als CUPS_ADMIN_PASSWORD=
 docker-compose up -d --force-recreate print-bridge
 ```
 

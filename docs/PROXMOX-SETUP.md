@@ -151,7 +151,7 @@ SSH-Tunnel vom PC:
 ssh -L 8631:127.0.0.1:631 root@<LXC-IP>
 ```
 
-Browser: `http://localhost:8631` — Login `admin` / Passwort aus `CUPS_ADMIN_PASSWORD`
+Browser: `http://localhost:8631` — Login **`print`** / Standard-Passwort **`print`** (olbat/cupsd)
 
 Drucker hinzufügen → **Internet Printing Protocol (IPP)** → URL z. B.:
 

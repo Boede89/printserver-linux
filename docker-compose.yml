@@ -24,6 +24,7 @@ services:
       cups-bootstrap:
         condition: service_completed_successfully
     environment:
+      # olbat/cupsd: Admin-Benutzer ist „print“ (Standard-Passwort: print), nicht CUPSADMIN/CUPSPASSWORD.
       CUPSADMIN: admin
       CUPSPASSWORD: ${CUPS_ADMIN_PASSWORD:-changeme}
     volumes:
@@ -43,7 +44,7 @@ services:
       PRINT_DEFAULT_PRINTER: ${PRINT_DEFAULT_PRINTER:-Zentrale}
       PRINT_BRIDGE_PORT: ${PRINT_BRIDGE_PORT:-8766}
       PRINT_ALLOWED_PRINTER_PREFIXES: ${PRINT_ALLOWED_PRINTER_PREFIXES:-}
-      CUPS_SERVER: admin:${CUPS_ADMIN_PASSWORD:-changeme}@cups:631
+      CUPS_SERVER: print:${CUPS_ADMIN_PASSWORD:-print}@cups:631
     volumes:
       - print_jobs:/var/spool/print-bridge
     ports:
